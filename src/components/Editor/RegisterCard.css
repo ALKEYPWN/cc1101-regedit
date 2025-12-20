@@ -1,0 +1,111 @@
+.register-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: all var(--transition-fast);
+}
+
+.register-card:hover {
+    border-color: var(--border-color-hover);
+}
+
+.register-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md);
+    background: var(--bg-tertiary);
+    cursor: pointer;
+}
+
+.register-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.register-addr {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent-secondary);
+    background: rgba(247, 147, 26, 0.15);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+}
+
+.register-name {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.register-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-left: var(--spacing-sm);
+}
+
+.register-value {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.register-input {
+    width: 70px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.register-input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+}
+
+.register-body {
+    padding: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+}
+
+.field-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.field-item {
+    display: grid;
+    grid-template-columns: 150px 1fr auto;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+}
+
+.field-name {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent-primary);
+}
+
+.field-desc {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.field-bits {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.field-option {
+    color: var(--success);
+}
