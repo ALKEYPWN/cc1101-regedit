@@ -50,7 +50,7 @@ function App() {
       <header className="header">
         <div className="header-left">
           <div className="logo">
-            <img src="./favicon/favicon-96x96.png" alt="CC1101 RegEdit" width="32" height="32" />
+            <img src="./favicon/favicon-96x96.png" alt="CC1101 RegEdit" width="48" height="48" />
           </div>
           <div className="header-title">
             <h1>CC1101 Register Editor</h1>
