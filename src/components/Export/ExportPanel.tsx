@@ -5,6 +5,7 @@
 import { useState, useCallback } from 'react';
 import type { ExportFormat } from '../../types/cc1101';
 import { generateExport, parseFlipperPresetData, parseRawHex } from '../../utils/export';
+import { toHex } from '../../utils/calculations';
 import './ExportPanel.css';
 
 interface ExportPanelProps {
@@ -98,9 +99,17 @@ export function ExportPanel({ registers, paTable, onImport, showToast }: ExportP
             Copy
           </button>
         </div>
-        <pre className="code-preview">
-          <code>{exportContent}</code>
-        </pre>
+        {format === 'flipper_setting' ? (
+          <HighlightedFlipperPreview
+            registers={registers}
+            paTable={paTable}
+            presetName={presetName}
+          />
+        ) : (
+          <pre className="code-preview">
+            <code>{exportContent}</code>
+          </pre>
+        )}
       </div>
 
       <div className="import-section">
@@ -123,6 +132,62 @@ export function ExportPanel({ registers, paTable, onImport, showToast }: ExportP
         </button>
       </div>
     </aside>
+  );
+}
+
+interface HighlightedFlipperPreviewProps {
+  registers: Record<number, number>;
+  paTable: number[];
+  presetName: string;
+}
+
+function HighlightedFlipperPreview({ registers, paTable, presetName }: HighlightedFlipperPreviewProps) {
+  // Build register pairs
+  const registerPairs: Array<{ addr: number; value: number }> = [];
+  for (let addr = 0; addr <= 0x2E; addr++) {
+    const value = registers[addr];
+    if (value !== undefined) {
+      registerPairs.push({ addr, value });
+    }
+  }
+
+  return (
+    <div className="highlighted-preview">
+      <div className="preview-legend">
+        <span className="legend-item">
+          <span className="legend-color legend-register"></span>
+          Registers
+        </span>
+        <span className="legend-item">
+          <span className="legend-color legend-terminator"></span>
+          Terminator
+        </span>
+        <span className="legend-item">
+          <span className="legend-color legend-pa-table"></span>
+          PA Table
+        </span>
+      </div>
+      <pre className="code-preview code-preview-highlighted">
+        <code>
+          <span className="preset-header">Custom_preset_name: {presetName}</span>
+          {'\n'}
+          <span className="preset-header">Custom_preset_module: CC1101</span>
+          {'\n'}
+          <span className="preset-header">Custom_preset_data: </span>
+          {registerPairs.map((pair, i) => (
+            <span key={`reg-${pair.addr}`} className="hex-register">
+              {toHex(pair.addr)} {toHex(pair.value)}{i < registerPairs.length - 1 ? ' ' : ''}
+            </span>
+          ))}
+          <span className="hex-terminator"> 00 00 </span>
+          {paTable.map((byte, i) => (
+            <span key={`pa-${i}`} className="hex-pa-table">
+              {toHex(byte)}{i < paTable.length - 1 ? ' ' : ''}
+            </span>
+          ))}
+        </code>
+      </pre>
+    </div>
   );
 }
 
