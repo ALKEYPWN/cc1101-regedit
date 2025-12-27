@@ -137,63 +137,95 @@ export function SpectrumVisualizer({
     };
   }, [isDragging, handleMove, handleEnd]);
 
-  // Generate modulation envelope path - centered at x=50
+  // Generate realistic spectrum with lobes - centered at x=50
   // SVG coordinates: Y=0 is top, Y=60 is bottom
   const envelopePath = useMemo(() => {
     const height = 60;
-    const peakY = 2;
-    const baseY = height;  // Baseline at bottom of viewBox
-    const midY = height * 0.4;
-    // bwWidth is the offset from center (50) to the edge
-    // Should match bandwidth marker positions exactly
+    const peakY = 4;
+    const baseY = height;
     const bwWidth = displayData.bwPercent / 2;
-    // Use devPercent directly so peaks align with deviation markers
-    // Small minimum (0.5) to prevent path collapse, but still allows sub-1% positioning
     const devWidth = Math.max(displayData.devPercent, 0.5);
     
-    if (isASK) {
-      return `
-        M 0,${baseY}
-        L ${50 - bwWidth},${baseY}
-        Q ${50 - bwWidth},${midY} 50,${peakY}
-        Q ${50 + bwWidth},${midY} ${50 + bwWidth},${baseY}
-        L 100,${baseY}
-      `;
-    } else {
-      if (is4FSK) {
-        // 4-FSK has 4 frequency levels: -3Δf, -Δf, +Δf, +3Δf
-        // Outer peaks at ±3× deviation, inner peaks at ±deviation
-        const innerDev = devWidth;           // Inner peaks at ±Δf (matches markers)
-        const outerDev = devWidth * 2.5;     // Outer peaks at ±3Δf
-        const saddleY = midY * 0.7;
+    // Helper: Gaussian function for smooth lobes (GFSK)
+    const gaussian = (x: number, center: number, sigma: number) => {
+      const exp = Math.exp(-Math.pow(x - center, 2) / (2 * sigma * sigma));
+      return peakY + (baseY - peakY) * (1 - exp);
+    };
+    
+    // Helper: Sinc-like function for lobes with side lobes (2-FSK, ASK)
+    const sincLobe = (x: number, center: number, width: number) => {
+      const dx = (x - center) / width;
+      if (Math.abs(dx) < 0.01) return peakY; // Main lobe peak
+      const sinc = Math.sin(Math.PI * dx) / (Math.PI * dx);
+      // Add side lobes with decreasing amplitude
+      const envelope = Math.exp(-Math.abs(dx) * 0.8);
+      const y = peakY + (baseY - peakY) * (1 - Math.abs(sinc) * envelope);
+      return Math.max(peakY, Math.min(baseY, y));
+    };
+    
+    // Generate spectrum points
+    const points: [number, number][] = [];
+    const step = 0.5; // Sample every 0.5% for smooth curves
+    
+    for (let x = 0; x <= 100; x += step) {
+      let y = baseY;
+      
+      if (isASK) {
+        // ASK/OOK: Single wide sinc-like main lobe centered at fc
+        const lobeWidth = Math.max(dataRate / 50, 3); // Width based on data rate
+        y = sincLobe(x, 50, lobeWidth);
+      } else if (is4FSK) {
+        // 4-FSK: Four Gaussian peaks at ±Δf, ±3Δf
+        const innerDev = devWidth;
+        const outerDev = devWidth * 2.5;
+        const sigma = Math.max(dataRate / 60, 2);
         
-        return `
-          M 0,${baseY}
-          L ${50 - bwWidth},${baseY}
-          Q ${50 - outerDev - 3},${midY} ${50 - outerDev},${peakY}
-          Q ${50 - outerDev + 2},${midY * 0.5} ${50 - (outerDev + innerDev) / 2},${saddleY}
-          Q ${50 - innerDev - 2},${midY * 0.5} ${50 - innerDev},${peakY}
-          Q ${50 - innerDev + 2},${midY * 0.6} 50,${midY * 0.5}
-          Q ${50 + innerDev - 2},${midY * 0.6} ${50 + innerDev},${peakY}
-          Q ${50 + innerDev + 2},${midY * 0.5} ${50 + (outerDev + innerDev) / 2},${saddleY}
-          Q ${50 + outerDev - 2},${midY * 0.5} ${50 + outerDev},${peakY}
-          Q ${50 + outerDev + 3},${midY} ${50 + bwWidth},${baseY}
-          L 100,${baseY}
-        `;
+        const y1 = gaussian(x, 50 - outerDev, sigma);
+        const y2 = gaussian(x, 50 - innerDev, sigma);
+        const y3 = gaussian(x, 50 + innerDev, sigma);
+        const y4 = gaussian(x, 50 + outerDev, sigma);
+        
+        y = Math.min(y1, y2, y3, y4);
+      } else if (modulation === 1) {
+        // GFSK: Two smooth Gaussian lobes at ±Δf
+        const sigma = Math.max(dataRate / 40, 2.5);
+        const y1 = gaussian(x, 50 - devWidth, sigma);
+        const y2 = gaussian(x, 50 + devWidth, sigma);
+        y = Math.min(y1, y2);
+      } else {
+        // 2-FSK / MSK: Two lobes with side lobes at ±Δf
+        const lobeWidth = Math.max(dataRate / 30, 2.5);
+        const y1 = sincLobe(x, 50 - devWidth, lobeWidth);
+        const y2 = sincLobe(x, 50 + devWidth, lobeWidth);
+        y = Math.min(y1, y2);
       }
       
-      // 2-FSK / GFSK / MSK - two peaks at ±Δf (aligned with deviation markers)
-      return `
-        M 0,${baseY}
-        L ${50 - bwWidth},${baseY}
-        Q ${50 - devWidth * 1.2},${midY} ${50 - devWidth},${peakY}
-        Q ${50 - devWidth * 0.3},${midY * 0.5} 50,${midY * 0.4}
-        Q ${50 + devWidth * 0.3},${midY * 0.5} ${50 + devWidth},${peakY}
-        Q ${50 + devWidth * 1.2},${midY} ${50 + bwWidth},${baseY}
-        L 100,${baseY}
-      `;
+      // Clip to bandwidth edges
+      if (x < 50 - bwWidth || x > 50 + bwWidth) {
+        y = baseY;
+      }
+      
+      points.push([x, y]);
     }
-  }, [isASK, is4FSK, displayData.devPercent, displayData.bwPercent]);
+    
+    // Build smooth path using cubic bezier curves
+    let path = `M 0,${baseY} L ${50 - bwWidth},${baseY}`;
+    
+    for (let i = 0; i < points.length - 1; i++) {
+      const [x1, y1] = points[i];
+      const [x2, y2] = points[i + 1];
+      
+      if (x1 >= 50 - bwWidth && x2 <= 50 + bwWidth) {
+        // Use quadratic curves for smoothness
+        const cx = (x1 + x2) / 2;
+        const cy = (y1 + y2) / 2;
+        path += ` Q ${cx},${cy} ${x2},${y2}`;
+      }
+    }
+    
+    path += ` L ${50 + bwWidth},${baseY} L 100,${baseY} Z`;
+    return path;
+  }, [isASK, is4FSK, modulation, displayData.devPercent, displayData.bwPercent, dataRate]);
 
   const freqMarkers = useMemo(() => {
     // Use fixed maximum span for frequency axis (max bandwidth = 812 kHz)
@@ -274,13 +306,21 @@ export function SpectrumVisualizer({
             onMouseDown={(e) => { e.preventDefault(); setIsDragging('bw-left'); }}
             onTouchStart={(e) => { e.preventDefault(); setIsDragging('bw-left'); }}
             title="Drag to adjust bandwidth"
-          />
+          >
+            <span className="bw-freq-label">
+              {(frequency - bandwidth / 2000).toFixed(3)}
+            </span>
+          </div>
           <div 
             className={`bw-handle right ${isDragging === 'bw-right' ? 'active' : ''}`}
             onMouseDown={(e) => { e.preventDefault(); setIsDragging('bw-right'); }}
             onTouchStart={(e) => { e.preventDefault(); setIsDragging('bw-right'); }}
             title="Drag to adjust bandwidth"
-          />
+          >
+            <span className="bw-freq-label">
+              {(frequency + bandwidth / 2000).toFixed(3)}
+            </span>
+          </div>
         </div>
 
         <div className="spectrum-envelope">

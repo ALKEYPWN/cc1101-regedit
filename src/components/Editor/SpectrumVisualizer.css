@@ -171,6 +171,28 @@
     opacity: 1;
 }
 
+.bw-freq-label {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.6rem;
+    font-family: var(--font-mono);
+    color: var(--accent-secondary);
+    background: var(--bg-primary);
+    padding: 1px 4px;
+    border-radius: 2px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.bw-handle:hover .bw-freq-label,
+.bw-handle.active .bw-freq-label {
+    opacity: 1;
+    font-weight: 600;
+}
+
 .spectrum-envelope {
     position: absolute;
     left: 0;
