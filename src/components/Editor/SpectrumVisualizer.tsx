@@ -175,15 +175,15 @@ export function SpectrumVisualizer({
         const lobeWidth = Math.max(dataRate / 50, 3); // Width based on data rate
         y = sincLobe(x, 50, lobeWidth);
       } else if (is4FSK) {
-        // 4-FSK: Four Gaussian peaks at ±Δf, ±3Δf
+        // 4-FSK: Four sinc-like lobes with side lobes at ±Δf, ±3Δf
         const innerDev = devWidth;
         const outerDev = devWidth * 2.5;
-        const sigma = Math.max(dataRate / 60, 2);
+        const lobeWidth = Math.max(dataRate / 30, 2.5);
         
-        const y1 = gaussian(x, 50 - outerDev, sigma);
-        const y2 = gaussian(x, 50 - innerDev, sigma);
-        const y3 = gaussian(x, 50 + innerDev, sigma);
-        const y4 = gaussian(x, 50 + outerDev, sigma);
+        const y1 = sincLobe(x, 50 - outerDev, lobeWidth);
+        const y2 = sincLobe(x, 50 - innerDev, lobeWidth);
+        const y3 = sincLobe(x, 50 + innerDev, lobeWidth);
+        const y4 = sincLobe(x, 50 + outerDev, lobeWidth);
         
         y = Math.min(y1, y2, y3, y4);
       } else if (modulation === 1) {

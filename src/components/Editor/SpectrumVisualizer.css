@@ -15,6 +15,15 @@
     border-bottom: 1px solid var(--border-color);
 }
 
+@media (max-width: 640px) {
+    .spectrum-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-sm);
+    }
+}
+
 .spectrum-title {
     font-size: 0.75rem;
     font-weight: 600;
@@ -27,6 +36,14 @@
     display: flex;
     gap: var(--spacing-md);
     align-items: center;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+    .spectrum-stats {
+        gap: var(--spacing-sm);
+        width: 100%;
+    }
 }
 
 .stat {
@@ -40,14 +57,32 @@
     color: var(--text-muted);
 }
 
+@media (max-width: 640px) {
+    .stat-label {
+        font-size: 0.65rem;
+    }
+}
+
 .stat-value {
     font-size: 0.75rem;
     font-family: var(--font-mono);
     color: var(--text-primary);
 }
 
+@media (max-width: 640px) {
+    .stat-value {
+        font-size: 0.7rem;
+    }
+}
+
 .mod-badge {
     margin-left: var(--spacing-sm);
+}
+
+@media (max-width: 640px) {
+    .mod-badge {
+        margin-left: 0;
+    }
 }
 
 .mod-type {
@@ -55,6 +90,13 @@
     border-radius: 10px;
     font-size: 0.7rem;
     font-weight: 600;
+}
+
+@media (max-width: 640px) {
+    .mod-type {
+        font-size: 0.65rem;
+        padding: 2px 6px;
+    }
 }
 
 .mod-type.mod-0,
