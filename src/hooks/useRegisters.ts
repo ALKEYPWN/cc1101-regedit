@@ -165,6 +165,7 @@ export function useRegisters() {
     );
     const modulation = ((registers[0x12] ?? 0) >> 4) & 0x07;
     const isASK = modulation === 3;
+
     setPaTable(getPaTable(freq, powerDbm, isASK));
   }, [registers]);
 

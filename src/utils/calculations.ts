@@ -136,8 +136,7 @@ export function getPaTable(freqMHz: number, powerDbm: number, isASK: boolean = f
   const closest = powers.reduce((prev, curr) =>
     Math.abs(curr - powerDbm) < Math.abs(prev - powerDbm) ? curr : prev
   );
-  const closestStr = closest >= 0 ? `+${closest}dBm` : `${closest}dBm`;
-
+  const closestStr = closest > 0 ? `+${closest}dBm` : `${closest}dBm`;
   const basePaValue = table[closestStr]?.[0] || table['+10dBm']?.[0] || 0xC0;
   
   if (isASK) {
