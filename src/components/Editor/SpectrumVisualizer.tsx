@@ -144,7 +144,9 @@ export function SpectrumVisualizer({
     const peakY = 2;
     const baseY = height;  // Baseline at bottom of viewBox
     const midY = height * 0.4;
-    const bwWidth = Math.min((displayData.bwPercent / 100) * 40, 40);
+    // bwWidth is the offset from center (50) to the edge
+    // Should match bandwidth marker positions exactly
+    const bwWidth = displayData.bwPercent / 2;
     // Use devPercent directly so peaks align with deviation markers
     // Small minimum (0.5) to prevent path collapse, but still allows sub-1% positioning
     const devWidth = Math.max(displayData.devPercent, 0.5);
@@ -152,9 +154,9 @@ export function SpectrumVisualizer({
     if (isASK) {
       return `
         M 0,${baseY}
-        L ${50 - bwWidth - 5},${baseY}
+        L ${50 - bwWidth},${baseY}
         Q ${50 - bwWidth},${midY} 50,${peakY}
-        Q ${50 + bwWidth},${midY} ${50 + bwWidth + 5},${baseY}
+        Q ${50 + bwWidth},${midY} ${50 + bwWidth},${baseY}
         L 100,${baseY}
       `;
     } else {
@@ -167,7 +169,7 @@ export function SpectrumVisualizer({
         
         return `
           M 0,${baseY}
-          L ${50 - bwWidth - 5},${baseY}
+          L ${50 - bwWidth},${baseY}
           Q ${50 - outerDev - 3},${midY} ${50 - outerDev},${peakY}
           Q ${50 - outerDev + 2},${midY * 0.5} ${50 - (outerDev + innerDev) / 2},${saddleY}
           Q ${50 - innerDev - 2},${midY * 0.5} ${50 - innerDev},${peakY}
@@ -175,7 +177,7 @@ export function SpectrumVisualizer({
           Q ${50 + innerDev - 2},${midY * 0.6} ${50 + innerDev},${peakY}
           Q ${50 + innerDev + 2},${midY * 0.5} ${50 + (outerDev + innerDev) / 2},${saddleY}
           Q ${50 + outerDev - 2},${midY * 0.5} ${50 + outerDev},${peakY}
-          Q ${50 + outerDev + 3},${midY} ${50 + bwWidth + 5},${baseY}
+          Q ${50 + outerDev + 3},${midY} ${50 + bwWidth},${baseY}
           L 100,${baseY}
         `;
       }
@@ -183,27 +185,29 @@ export function SpectrumVisualizer({
       // 2-FSK / GFSK / MSK - two peaks at ±Δf (aligned with deviation markers)
       return `
         M 0,${baseY}
-        L ${50 - bwWidth - 5},${baseY}
+        L ${50 - bwWidth},${baseY}
         Q ${50 - devWidth * 1.2},${midY} ${50 - devWidth},${peakY}
         Q ${50 - devWidth * 0.3},${midY * 0.5} 50,${midY * 0.4}
         Q ${50 + devWidth * 0.3},${midY * 0.5} ${50 + devWidth},${peakY}
-        Q ${50 + devWidth * 1.2},${midY} ${50 + bwWidth + 5},${baseY}
+        Q ${50 + devWidth * 1.2},${midY} ${50 + bwWidth},${baseY}
         L 100,${baseY}
       `;
     }
   }, [isASK, is4FSK, displayData.devPercent, displayData.bwPercent]);
 
   const freqMarkers = useMemo(() => {
-    const halfBw = bandwidth / 2000; // Half bandwidth in MHz
-    const step = halfBw / 2; // Quarter step
+    // Use fixed maximum span for frequency axis (max bandwidth = 812 kHz)
+    // This way BW markers show correct position within the fixed window
+    const maxHalfSpan = 812 / 2000; // 406 kHz = 0.406 MHz on each side
+    const quarterSpan = maxHalfSpan / 2; // 203 kHz steps
     return [
-      { pos: 0, label: `${(frequency - halfBw).toFixed(2)}`, edge: 'left' },
-      { pos: 25, label: `${(frequency - step).toFixed(2)}` },
+      { pos: 0, label: `${(frequency - maxHalfSpan).toFixed(2)}`, edge: 'left' },
+      { pos: 25, label: `${(frequency - quarterSpan).toFixed(2)}` },
       { pos: 50, label: `${frequency.toFixed(3)} MHz`, isCenter: true },
-      { pos: 75, label: `${(frequency + step).toFixed(2)}` },
-      { pos: 100, label: `${(frequency + halfBw).toFixed(2)}`, edge: 'right' },
+      { pos: 75, label: `${(frequency + quarterSpan).toFixed(2)}` },
+      { pos: 100, label: `${(frequency + maxHalfSpan).toFixed(2)}`, edge: 'right' },
     ];
-  }, [frequency, bandwidth]);
+  }, [frequency]);
 
   return (
     <div className="spectrum-visualizer">
