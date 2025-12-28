@@ -5,8 +5,8 @@
 import { useState, useCallback, useEffect } from 'react';
 import type { ExportFormat } from '../../types/cc1101';
 import { generateExport, parseFlipperPresetData, parseRawHex } from '../../utils/export';
-import { toHex } from '../../utils/calculations';
-import { CC1101_REGISTERS } from '../../data/registers';
+import { HighlightedFlipperPreview } from './HighlightedFlipperPreview';
+import { CopyIcon, ImportIcon, ExportIcon } from './icons';
 import './ExportPanel.css';
 
 interface ExportPanelProps {
@@ -185,101 +185,5 @@ export function ExportPanel({ registers, paTable, onImport, showToast }: ExportP
     <aside className="export-panel">
       {panelContent}
     </aside>
-  );
-}
-
-interface HighlightedFlipperPreviewProps {
-  registers: Record<number, number>;
-  paTable: number[];
-  presetName: string;
-}
-
-function HighlightedFlipperPreview({ registers, paTable, presetName }: HighlightedFlipperPreviewProps) {
-  // Check sync mode from MDMCFG2 to determine if SYNC words should be included
-  const mdmcfg2 = registers[0x12] ?? 0x13; // Default value
-  const syncMode = mdmcfg2 & 0x03; // Bits 1:0
-  const isSyncEnabled = syncMode !== 0;
-
-  // Build register pairs (only those meant for Flipper export)
-  const registerPairs: Array<{ addr: number; value: number }> = [];
-  for (let addr = 0; addr <= 0x2E; addr++) {
-    const value = registers[addr];
-    const regDef = CC1101_REGISTERS[addr];
-    
-    // Skip SYNC1/SYNC0 if sync mode is disabled
-    if ((addr === 0x04 || addr === 0x05) && !isSyncEnabled) {
-      continue;
-    }
-    
-    // Only include if explicitly marked for Flipper export
-    if (value !== undefined && regDef?.flipperExport === true) {
-      registerPairs.push({ addr, value });
-    }
-  }
-
-  return (
-    <div className="highlighted-preview">
-      <div className="preview-legend">
-        <span className="legend-item">
-          <span className="legend-color legend-register"></span>
-          Registers
-        </span>
-        <span className="legend-item">
-          <span className="legend-color legend-terminator"></span>
-          Terminator
-        </span>
-        <span className="legend-item">
-          <span className="legend-color legend-pa-table"></span>
-          PA Table
-        </span>
-      </div>
-      <pre className="code-preview code-preview-highlighted">
-        <code>
-          <span className="preset-header">Custom_preset_name: {presetName}</span>
-          {'\n'}
-          <span className="preset-header">Custom_preset_module: CC1101</span>
-          {'\n'}
-          <span className="preset-header">Custom_preset_data: </span>
-          {registerPairs.map((pair, i) => (
-            <span key={`reg-${pair.addr}`} className="hex-register">
-              {toHex(pair.addr)} {toHex(pair.value)}{i < registerPairs.length - 1 ? ' ' : ''}
-            </span>
-          ))}
-          <span className="hex-terminator"> 00 00 </span>
-          {paTable.map((byte, i) => (
-            <span key={`pa-${i}`} className="hex-pa-table">
-              {toHex(byte)}{i < paTable.length - 1 ? ' ' : ''}
-            </span>
-          ))}
-        </code>
-      </pre>
-    </div>
-  );
-}
-
-function CopyIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
-      <path d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6z"/>
-      <path d="M2 6a2 2 0 0 1 2-2v10a1 1 0 0 0 1 1h8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6z"/>
-    </svg>
-  );
-}
-
-function ImportIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
-      <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-      <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
-    </svg>
-  );
-}
-
-function ExportIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor">
-      <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-      <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-    </svg>
   );
 }
