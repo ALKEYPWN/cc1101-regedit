@@ -21,8 +21,6 @@ describe('Export Utilities', () => {
       const result = generateFlipperPresetData(sampleRegisters, samplePaTable);
       
       // Should contain register address-value pairs
-      expect(result).toContain('00 2E');
-      expect(result).toContain('01 2E');
       expect(result).toContain('02 06');
     });
 

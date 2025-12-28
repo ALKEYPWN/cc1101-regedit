@@ -14,6 +14,7 @@ export interface Register {
   description: string;
   default: number;
   fields: RegisterField[];
+  flipperExport?: boolean; // If false, exclude from Flipper custom preset export (defaults to true)
 }
 
 export type RegisterMap = Record<number, Register>;

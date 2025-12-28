@@ -6,6 +6,7 @@ import { useState, useCallback } from 'react';
 import type { ExportFormat } from '../../types/cc1101';
 import { generateExport, parseFlipperPresetData, parseRawHex } from '../../utils/export';
 import { toHex } from '../../utils/calculations';
+import { CC1101_REGISTERS } from '../../data/registers';
 import './ExportPanel.css';
 
 interface ExportPanelProps {
@@ -142,11 +143,24 @@ interface HighlightedFlipperPreviewProps {
 }
 
 function HighlightedFlipperPreview({ registers, paTable, presetName }: HighlightedFlipperPreviewProps) {
-  // Build register pairs
+  // Check sync mode from MDMCFG2 to determine if SYNC words should be included
+  const mdmcfg2 = registers[0x12] ?? 0x13; // Default value
+  const syncMode = mdmcfg2 & 0x03; // Bits 1:0
+  const isSyncEnabled = syncMode !== 0;
+
+  // Build register pairs (only those meant for Flipper export)
   const registerPairs: Array<{ addr: number; value: number }> = [];
   for (let addr = 0; addr <= 0x2E; addr++) {
     const value = registers[addr];
-    if (value !== undefined) {
+    const regDef = CC1101_REGISTERS[addr];
+    
+    // Skip SYNC1/SYNC0 if sync mode is disabled
+    if ((addr === 0x04 || addr === 0x05) && !isSyncEnabled) {
+      continue;
+    }
+    
+    // Only include if explicitly marked for Flipper export
+    if (value !== undefined && regDef?.flipperExport === true) {
       registerPairs.push({ addr, value });
     }
   }

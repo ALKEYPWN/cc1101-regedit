@@ -15,10 +15,23 @@ export function generateFlipperPresetData(
 ): string {
   const parts: string[] = [];
 
-  // Add register address-value pairs
+  // Check sync mode from MDMCFG2 to determine if SYNC words should be included
+  const mdmcfg2 = registers[0x12] ?? 0x13; // Default value
+  const syncMode = mdmcfg2 & 0x03; // Bits 1:0
+  const isSyncEnabled = syncMode !== 0;
+
+  // Add register address-value pairs (only those meant for Flipper export)
   for (let addr = 0; addr <= 0x2E; addr++) {
     const value = registers[addr];
-    if (value !== undefined) {
+    const regDef = CC1101_REGISTERS[addr];
+    
+    // Skip SYNC1/SYNC0 if sync mode is disabled
+    if ((addr === 0x04 || addr === 0x05) && !isSyncEnabled) {
+      continue;
+    }
+    
+    // Only include if explicitly marked for Flipper export
+    if (value !== undefined && regDef?.flipperExport === true) {
       parts.push(toHex(addr));
       parts.push(toHex(value));
     }
@@ -122,6 +135,9 @@ export function parseFlipperPresetData(
   const bytes = cleanData.split(/\s+/).map(b => parseInt(b, 16));
 
   const registers: Record<number, number> = {};
+  for (let addr = 0; addr <= 0x2E; addr++) {
+    registers[addr] = 0;
+  }
   const paTable: number[] = [];
 
   let i = 0;

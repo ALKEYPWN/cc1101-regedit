@@ -10,6 +10,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'IOCFG2',
     description: 'GDO2 Output Pin Configuration',
     default: 0x29,
+    flipperExport: false,
     fields: [
       { name: 'GDO2_INV', bits: [6], description: 'Invert output' },
       { name: 'GDO2_CFG', bits: [5, 4, 3, 2, 1, 0], description: 'GDO2 signal selection',
@@ -31,6 +32,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'IOCFG1',
     description: 'GDO1 Output Pin Configuration',
     default: 0x2E,
+    flipperExport: false,
     fields: [
       { name: 'GDO1_INV', bits: [6], description: 'Invert output' },
       { name: 'GDO1_CFG', bits: [5, 4, 3, 2, 1, 0], description: 'GDO1 signal selection' }
@@ -40,6 +42,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'IOCFG0',
     description: 'GDO0 Output Pin Configuration',
     default: 0x06,
+    flipperExport: true,
     fields: [
       { name: 'TEMP_SENSOR_ENABLE', bits: [7], description: 'Enable analog temp sensor' },
       { name: 'GDO0_INV', bits: [6], description: 'Invert output' },
@@ -50,6 +53,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'FIFOTHR',
     description: 'RX FIFO and TX FIFO Thresholds',
     default: 0x47,
+    flipperExport: true,
     fields: [
       { name: 'ADC_RETENTION', bits: [6], description: 'Retention mode' },
       { name: 'CLOSE_IN_RX', bits: [5, 4], description: 'RX attenuation' },
@@ -67,6 +71,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'SYNC1',
     description: 'Sync Word, High Byte',
     default: 0xD3,
+    flipperExport: true,
     fields: [
       { name: 'SYNC[15:8]', bits: [7, 6, 5, 4, 3, 2, 1, 0], description: 'High byte of sync word' }
     ]
@@ -75,6 +80,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'SYNC0',
     description: 'Sync Word, Low Byte',
     default: 0x91,
+    flipperExport: true,
     fields: [
       { name: 'SYNC[7:0]', bits: [7, 6, 5, 4, 3, 2, 1, 0], description: 'Low byte of sync word' }
     ]
@@ -83,6 +89,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'PKTLEN',
     description: 'Packet Length',
     default: 0xFF,
+    flipperExport: true,
     fields: [
       { name: 'PACKET_LENGTH', bits: [7, 6, 5, 4, 3, 2, 1, 0], description: 'Packet length in fixed mode, max length in variable mode' }
     ]
@@ -91,6 +98,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'PKTCTRL1',
     description: 'Packet Automation Control',
     default: 0x04,
+    flipperExport: true,
     fields: [
       { name: 'PQT', bits: [7, 6, 5], description: 'Preamble quality estimator threshold' },
       { name: 'CRC_AUTOFLUSH', bits: [3], description: 'Auto flush RX FIFO on CRC error' },
@@ -104,6 +112,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'PKTCTRL0',
     description: 'Packet Automation Control',
     default: 0x45,
+    flipperExport: true,
     fields: [
       { name: 'WHITE_DATA', bits: [6], description: 'Data whitening enable' },
       { name: 'PKT_FORMAT', bits: [5, 4], description: 'Packet format',
@@ -119,6 +128,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'ADDR',
     description: 'Device Address',
     default: 0x00,
+    flipperExport: true,
     fields: [
       { name: 'DEVICE_ADDR', bits: [7, 6, 5, 4, 3, 2, 1, 0], description: 'Device address for packet filtering' }
     ]
@@ -127,6 +137,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'CHANNR',
     description: 'Channel Number',
     default: 0x00,
+    flipperExport: true,
     fields: [
       { name: 'CHAN', bits: [7, 6, 5, 4, 3, 2, 1, 0], description: 'Channel number' }
     ]
@@ -135,6 +146,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'FSCTRL1',
     description: 'Frequency Synthesizer Control',
     default: 0x06,
+    flipperExport: true,
     fields: [
       { name: 'FREQ_IF', bits: [4, 3, 2, 1, 0], description: 'IF frequency (f_IF = f_XOSC / 2^10 × FREQ_IF)' }
     ]
@@ -143,6 +155,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'FSCTRL0',
     description: 'Frequency Synthesizer Control',
     default: 0x00,
+    flipperExport: true,
     fields: [
       { name: 'FREQOFF', bits: [7, 6, 5, 4, 3, 2, 1, 0], description: 'Frequency offset (signed)' }
     ]
@@ -151,6 +164,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'FREQ2',
     description: 'Frequency Control Word, High Byte',
     default: 0x10,
+    flipperExport: false,
     fields: [
       { name: 'FREQ[23:22]', bits: [7, 6], description: 'Always write 00' },
       { name: 'FREQ[21:16]', bits: [5, 4, 3, 2, 1, 0], description: 'Frequency word high bits' }
@@ -160,6 +174,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'FREQ1',
     description: 'Frequency Control Word, Middle Byte',
     default: 0xB0,
+    flipperExport: false,
     fields: [
       { name: 'FREQ[15:8]', bits: [7, 6, 5, 4, 3, 2, 1, 0], description: 'Frequency word middle bits' }
     ]
@@ -168,6 +183,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'FREQ0',
     description: 'Frequency Control Word, Low Byte',
     default: 0x71,
+    flipperExport: false,
     fields: [
       { name: 'FREQ[7:0]', bits: [7, 6, 5, 4, 3, 2, 1, 0], description: 'Frequency word low bits' }
     ]
@@ -176,6 +192,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'MDMCFG4',
     description: 'Modem Configuration',
     default: 0xCA,
+    flipperExport: true,
     fields: [
       { name: 'CHANBW_E', bits: [7, 6], description: 'Channel bandwidth exponent' },
       { name: 'CHANBW_M', bits: [5, 4], description: 'Channel bandwidth mantissa' },
@@ -186,6 +203,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'MDMCFG3',
     description: 'Modem Configuration',
     default: 0x83,
+    flipperExport: true,
     fields: [
       { name: 'DRATE_M', bits: [7, 6, 5, 4, 3, 2, 1, 0], description: 'Data rate mantissa' }
     ]
@@ -194,6 +212,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'MDMCFG2',
     description: 'Modem Configuration',
     default: 0x13,
+    flipperExport: true,
     fields: [
       { name: 'DEM_DCFILT_OFF', bits: [7], description: 'Disable DC blocking filter' },
       { name: 'MOD_FORMAT', bits: [6, 5, 4], description: 'Modulation format',
@@ -209,6 +228,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'MDMCFG1',
     description: 'Modem Configuration',
     default: 0x22,
+    flipperExport: true,
     fields: [
       { name: 'FEC_EN', bits: [7], description: 'Forward Error Correction enable' },
       { name: 'NUM_PREAMBLE', bits: [6, 5, 4], description: 'Minimum preamble bytes',
@@ -221,6 +241,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'MDMCFG0',
     description: 'Modem Configuration',
     default: 0xF8,
+    flipperExport: true,
     fields: [
       { name: 'CHANSPC_M', bits: [7, 6, 5, 4, 3, 2, 1, 0], description: 'Channel spacing mantissa' }
     ]
@@ -229,6 +250,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'DEVIATN',
     description: 'Modem Deviation Setting',
     default: 0x35,
+    flipperExport: true,
     fields: [
       { name: 'DEVIATION_E', bits: [6, 5, 4], description: 'Deviation exponent' },
       { name: 'DEVIATION_M', bits: [2, 1, 0], description: 'Deviation mantissa' }
@@ -238,6 +260,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'MCSM2',
     description: 'Main Radio Control State Machine Configuration',
     default: 0x07,
+    flipperExport: true,
     fields: [
       { name: 'RX_TIME_RSSI', bits: [4], description: 'Direct RX terminate based on RSSI' },
       { name: 'RX_TIME_QUAL', bits: [3], description: 'Check sync word qualifier for RX timeout' },
@@ -248,6 +271,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'MCSM1',
     description: 'Main Radio Control State Machine Configuration',
     default: 0x30,
+    flipperExport: true,
     fields: [
       { name: 'CCA_MODE', bits: [5, 4], description: 'Clear channel assessment mode',
         options: { 0: 'Always', 1: 'If RSSI below threshold', 2: 'Unless receiving packet', 3: 'If RSSI below threshold unless receiving' }
@@ -264,6 +288,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'MCSM0',
     description: 'Main Radio Control State Machine Configuration',
     default: 0x18,
+    flipperExport: true,
     fields: [
       { name: 'FS_AUTOCAL', bits: [5, 4], description: 'Auto calibration',
         options: { 0: 'Never', 1: 'IDLE -> RX/TX', 2: 'RX/TX -> IDLE', 3: 'Every 4th RX/TX -> IDLE' }
@@ -277,6 +302,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'FOCCFG',
     description: 'Frequency Offset Compensation Configuration',
     default: 0x16,
+    flipperExport: true,
     fields: [
       { name: 'FOC_BS_CS_GATE', bits: [5], description: 'Freeze FOC/BS until carrier sense' },
       { name: 'FOC_PRE_K', bits: [4, 3], description: 'Freq compensation loop gain before sync' },
@@ -288,6 +314,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'BSCFG',
     description: 'Bit Synchronization Configuration',
     default: 0x6C,
+    flipperExport: true,
     fields: [
       { name: 'BS_PRE_KI', bits: [7, 6], description: 'Bit sync I gain before sync' },
       { name: 'BS_PRE_KP', bits: [5, 4], description: 'Bit sync P gain before sync' },
@@ -300,6 +327,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'AGCCTRL2',
     description: 'AGC Control',
     default: 0x43,
+    flipperExport: true,
     fields: [
       { name: 'MAX_DVGA_GAIN', bits: [7, 6], description: 'Maximum DVGA gain' },
       { name: 'MAX_LNA_GAIN', bits: [5, 4, 3], description: 'Maximum LNA + LNA2 gain' },
@@ -310,6 +338,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'AGCCTRL1',
     description: 'AGC Control',
     default: 0x40,
+    flipperExport: true,
     fields: [
       { name: 'AGC_LNA_PRIORITY', bits: [6], description: 'LNA gain priority' },
       { name: 'CARRIER_SENSE_REL_THR', bits: [5, 4], description: 'Carrier sense relative threshold' },
@@ -320,6 +349,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'AGCCTRL0',
     description: 'AGC Control',
     default: 0x91,
+    flipperExport: true,
     fields: [
       { name: 'HYST_LEVEL', bits: [7, 6], description: 'AGC hysteresis level' },
       { name: 'WAIT_TIME', bits: [5, 4], description: 'AGC wait time' },
@@ -331,6 +361,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'WOREVT1',
     description: 'High Byte Event0 Timeout',
     default: 0x87,
+    flipperExport: false,
     fields: [
       { name: 'EVENT0[15:8]', bits: [7, 6, 5, 4, 3, 2, 1, 0], description: 'Event0 timeout high byte' }
     ]
@@ -339,6 +370,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'WOREVT0',
     description: 'Low Byte Event0 Timeout',
     default: 0x6B,
+    flipperExport: false,
     fields: [
       { name: 'EVENT0[7:0]', bits: [7, 6, 5, 4, 3, 2, 1, 0], description: 'Event0 timeout low byte' }
     ]
@@ -347,6 +379,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'WORCTRL',
     description: 'Wake On Radio Control',
     default: 0xFB,
+    flipperExport: false,
     fields: [
       { name: 'RC_PD', bits: [7], description: 'Power down RC oscillator' },
       { name: 'EVENT1', bits: [6, 5, 4], description: 'Event1 timeout' },
@@ -358,6 +391,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'FREND1',
     description: 'Front End RX Configuration',
     default: 0x56,
+    flipperExport: true,
     fields: [
       { name: 'LNA_CURRENT', bits: [7, 6], description: 'LNA current' },
       { name: 'LNA2MIX_CURRENT', bits: [5, 4], description: 'LNA2 current' },
@@ -369,6 +403,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'FREND0',
     description: 'Front End TX Configuration',
     default: 0x10,
+    flipperExport: true,
     fields: [
       { name: 'LODIV_BUF_CURRENT_TX', bits: [5, 4], description: 'LO divider buffer current TX' },
       { name: 'PA_POWER', bits: [2, 1, 0], description: 'PA power setting index' }
@@ -378,6 +413,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'FSCAL3',
     description: 'Frequency Synthesizer Calibration',
     default: 0xA9,
+    flipperExport: true,
     fields: [
       { name: 'FSCAL3[7:6]', bits: [7, 6], description: 'Calibration result' },
       { name: 'CHP_CURR_CAL_EN', bits: [5, 4], description: 'Charge pump calibration' },
@@ -388,6 +424,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'FSCAL2',
     description: 'Frequency Synthesizer Calibration',
     default: 0x0A,
+    flipperExport: true,
     fields: [
       { name: 'VCO_CORE_H_EN', bits: [5], description: 'VCO core high' },
       { name: 'FSCAL2', bits: [4, 3, 2, 1, 0], description: 'VCO calibration result' }
@@ -397,6 +434,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'FSCAL1',
     description: 'Frequency Synthesizer Calibration',
     default: 0x20,
+    flipperExport: true,
     fields: [
       { name: 'FSCAL1', bits: [5, 4, 3, 2, 1, 0], description: 'VCO capacitor array setting' }
     ]
@@ -405,6 +443,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'FSCAL0',
     description: 'Frequency Synthesizer Calibration',
     default: 0x0D,
+    flipperExport: true,
     fields: [
       { name: 'FSCAL0', bits: [6, 5, 4, 3, 2, 1, 0], description: 'VCO frequency offset' }
     ]
@@ -413,6 +452,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'RCCTRL1',
     description: 'RC Oscillator Configuration',
     default: 0x41,
+    flipperExport: false,
     fields: [
       { name: 'RCCTRL1', bits: [6, 5, 4, 3, 2, 1, 0], description: 'RC oscillator control' }
     ]
@@ -421,6 +461,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'RCCTRL0',
     description: 'RC Oscillator Configuration',
     default: 0x00,
+    flipperExport: false,
     fields: [
       { name: 'RCCTRL0', bits: [6, 5, 4, 3, 2, 1, 0], description: 'RC oscillator control' }
     ]
@@ -429,6 +470,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'FSTEST',
     description: 'Frequency Synthesizer Calibration Control',
     default: 0x59,
+    flipperExport: false,
     fields: [
       { name: 'FSTEST', bits: [7, 6, 5, 4, 3, 2, 1, 0], description: 'Test register' }
     ]
@@ -437,6 +479,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'PTEST',
     description: 'Production Test',
     default: 0x7F,
+    flipperExport: false,
     fields: [
       { name: 'PTEST', bits: [7, 6, 5, 4, 3, 2, 1, 0], description: 'Production test' }
     ]
@@ -445,6 +488,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'AGCTEST',
     description: 'AGC Test',
     default: 0x3F,
+    flipperExport: false,
     fields: [
       { name: 'AGCTEST', bits: [7, 6, 5, 4, 3, 2, 1, 0], description: 'AGC test' }
     ]
@@ -453,6 +497,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'TEST2',
     description: 'Various Test Settings',
     default: 0x88,
+    flipperExport: false,
     fields: [
       { name: 'TEST2', bits: [7, 6, 5, 4, 3, 2, 1, 0], description: 'Test settings' }
     ]
@@ -461,6 +506,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'TEST1',
     description: 'Various Test Settings',
     default: 0x31,
+    flipperExport: false,
     fields: [
       { name: 'TEST1', bits: [7, 6, 5, 4, 3, 2, 1, 0], description: 'Test settings' }
     ]
@@ -469,6 +515,7 @@ export const CC1101_REGISTERS: RegisterMap = {
     name: 'TEST0',
     description: 'Various Test Settings',
     default: 0x0B,
+    flipperExport: false,
     fields: [
       { name: 'TEST0[7:2]', bits: [7, 6, 5, 4, 3, 2], description: 'Test settings' },
       { name: 'VCO_SEL_CAL_EN', bits: [1], description: 'VCO calibration enable' },
@@ -659,6 +706,39 @@ export const PRESETS: PresetMap = {
       0x1E: 0x87, 0x1F: 0x6B, 0x20: 0xFB, 0x21: 0x56, 0x22: 0x10, 0x23: 0xE9,
       0x24: 0x2A, 0x25: 0x00, 0x26: 0x1F, 0x27: 0x41, 0x28: 0x00, 0x29: 0x59,
       0x2A: 0x7F, 0x2B: 0x3F, 0x2C: 0x88, 0x2D: 0x31, 0x2E: 0x0B
+    },
+    paTable: [0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+  },
+
+  // Walkie Talkie / PMR446 preset (433.92 MHz)
+  // Narrow-band 2-FSK with Manchester encoding for voice communication
+  // No sync word - continuous transmission mode typical for analog walkie talkies
+  'Walkie Talkie (433.92MHz)': {
+    frequency: 433.92,
+    modulation: 0, // 2-FSK
+    dataRate: 4.82, // ~4.82 kbps
+    bandwidth: 135, // 135 kHz
+    deviation: 2.78, // 2.78 kHz (narrow deviation for voice)
+    preamble: 2, // 2 bytes preamble
+    syncMode: 0, // No sync word (continuous mode)
+    registers: {
+      0x02: 0x0D, // IOCFG0
+      0x07: 0x04, // PKTCTRL1
+      0x08: 0x32, // PKTCTRL0
+      0x0B: 0x06, // FSCTRL1
+      0x10: 0xA7, // MDMCFG4 - BW=135kHz, DRATE_E=7
+      0x11: 0x83, // MDMCFG3 - DRATE_M=131
+      0x12: 0x04, // MDMCFG2 - 2-FSK, Manchester enabled, no sync
+      0x13: 0x02, // MDMCFG1 - 2 byte preamble
+      0x14: 0x00, // MDMCFG0
+      0x15: 0x06, // DEVIATN - 2.78kHz
+      0x18: 0x18, // MCSM0
+      0x19: 0x1F, // FOCCFG
+      0x1B: 0x07, // AGCCTRL2
+      0x1C: 0x00, // AGCCTRL1
+      0x1D: 0x00, // AGCCTRL0
+      0x21: 0x56, // FREND1
+      0x22: 0x10, // FREND0
     },
     paTable: [0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
   },
