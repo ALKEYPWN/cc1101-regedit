@@ -2,7 +2,7 @@
  * ExportPanel Component - Export and import functionality
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import type { ExportFormat } from '../../types/cc1101';
 import { generateExport, parseFlipperPresetData, parseRawHex } from '../../utils/export';
 import { toHex } from '../../utils/calculations';
@@ -20,6 +20,18 @@ export function ExportPanel({ registers, paTable, onImport, showToast }: ExportP
   const [format, setFormat] = useState<ExportFormat>('flipper_setting');
   const [presetName, setPresetName] = useState('Custom_433');
   const [importData, setImportData] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Detect if we're on mobile
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 900);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
 
   const exportContent = generateExport(format, presetName, registers, paTable);
 
@@ -60,10 +72,19 @@ export function ExportPanel({ registers, paTable, onImport, showToast }: ExportP
     }
   }, [importData, onImport, showToast]);
 
-  return (
-    <aside className="export-panel">
+  const panelContent = (
+    <>
       <div className="panel-header">
         <h2>Export</h2>
+        {isMobile && isOpen && (
+          <button 
+            className="close-button" 
+            onClick={() => setIsOpen(false)}
+            aria-label="Close"
+          >
+            ×
+          </button>
+        )}
       </div>
 
       <div className="control-group">
@@ -132,6 +153,37 @@ export function ExportPanel({ registers, paTable, onImport, showToast }: ExportP
           Import
         </button>
       </div>
+    </>
+  );
+
+  if (isMobile) {
+    return (
+      <>
+        {/* FAB Button */}
+        <button 
+          className="export-fab" 
+          onClick={() => setIsOpen(true)}
+          aria-label="Export"
+        >
+          <ExportIcon />
+        </button>
+
+        {/* Bottom Sheet Overlay */}
+        {isOpen && (
+          <>
+            <div className="export-overlay" onClick={() => setIsOpen(false)} />
+            <aside className="export-panel export-panel-mobile">
+              {panelContent}
+            </aside>
+          </>
+        )}
+      </>
+    );
+  }
+
+  return (
+    <aside className="export-panel">
+      {panelContent}
     </aside>
   );
 }
@@ -219,6 +271,15 @@ function ImportIcon() {
     <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
       <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
       <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+    </svg>
+  );
+}
+
+function ExportIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor">
+      <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+      <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
     </svg>
   );
 }

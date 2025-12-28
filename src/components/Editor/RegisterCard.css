@@ -19,10 +19,27 @@
     cursor: pointer;
 }
 
+@container register-list (max-width: 500px) {
+    .register-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-sm);
+    }
+}
+
 .register-info {
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+@container register-list (max-width: 500px) {
+    .register-info {
+        flex: 1;
+        gap: var(--spacing-sm);
+    }
 }
 
 .register-addr {
@@ -32,11 +49,25 @@
     background: rgba(247, 147, 26, 0.15);
     padding: 2px 8px;
     border-radius: var(--radius-sm);
+    flex-shrink: 0;
+}
+
+@container register-list (max-width: 500px) {
+    .register-addr {
+        font-size: 0.75rem;
+    }
 }
 
 .register-name {
     font-weight: 600;
     color: var(--text-primary);
+    flex-shrink: 0;
+}
+
+@container register-list (max-width: 500px) {
+    .register-name {
+        font-size: 0.95rem;
+    }
 }
 
 .register-desc {
@@ -45,10 +76,27 @@
     margin-left: var(--spacing-sm);
 }
 
+@container register-list (max-width: 500px) {
+    .register-desc {
+        margin-left: 0;
+        font-size: 0.75rem;
+        flex-basis: 100%;
+    }
+}
+
 .register-value {
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
+}
+
+@container register-list (max-width: 500px) {
+    .register-value {
+        width: 100%;
+        justify-content: space-between;
+        padding-top: var(--spacing-xs);
+        border-top: 1px solid var(--border-color);
+    }
 }
 
 .register-input {
@@ -63,6 +111,13 @@
     text-align: center;
 }
 
+@container register-list (max-width: 500px) {
+    .register-input {
+        min-height: 36px;
+        font-size: 1rem;
+    }
+}
+
 .register-input:focus {
     outline: none;
     border-color: var(--accent-primary);
@@ -71,6 +126,12 @@
 .register-body {
     padding: var(--spacing-md);
     border-top: 1px solid var(--border-color);
+}
+
+@container register-list (max-width: 500px) {
+    .register-body {
+        padding: var(--spacing-sm);
+    }
 }
 
 .field-list {
@@ -89,10 +150,24 @@
     border-radius: var(--radius-sm);
 }
 
+@container register-list (max-width: 500px) {
+    .field-item {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xs);
+        padding: var(--spacing-xs);
+    }
+}
+
 .field-name {
     font-family: var(--font-mono);
     font-size: 0.8rem;
     color: var(--accent-primary);
+}
+
+@container register-list (max-width: 500px) {
+    .field-name {
+        font-size: 0.875rem;
+    }
 }
 
 .field-desc {
@@ -100,10 +175,22 @@
     color: var(--text-secondary);
 }
 
+@container register-list (max-width: 500px) {
+    .field-desc {
+        font-size: 0.875rem;
+    }
+}
+
 .field-bits {
     font-family: var(--font-mono);
     font-size: 0.75rem;
     color: var(--text-muted);
+}
+
+@container register-list (max-width: 500px) {
+    .field-bits {
+        font-size: 0.8rem;
+    }
 }
 
 .field-option {

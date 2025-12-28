@@ -4,11 +4,23 @@
     background: var(--bg-primary);
 }
 
+@media (max-width: 768px) {
+    .editor-panel {
+        padding: var(--spacing-sm);
+    }
+}
+
 .panel-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: var(--spacing-lg);
+}
+
+@media (max-width: 768px) {
+    .panel-header {
+        margin-bottom: var(--spacing-md);
+    }
 }
 
 .panel-header h2 {
@@ -20,4 +32,12 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
+    container-type: inline-size;
+    container-name: register-list;
+}
+
+@media (max-width: 768px) {
+    .register-list {
+        gap: var(--spacing-sm);
+    }
 }

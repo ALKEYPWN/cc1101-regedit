@@ -5,6 +5,13 @@
     font-size: 0.7rem;
 }
 
+@container register-list (max-width: 500px) {
+    .bit-display {
+        gap: 2px;
+        font-size: 0.8rem;
+    }
+}
+
 .bit {
     width: 18px;
     height: 22px;
@@ -19,10 +26,24 @@
     user-select: none;
 }
 
+@container register-list (max-width: 500px) {
+    .bit {
+        width: 28px;
+        height: 32px;
+        border-radius: 4px;
+    }
+}
+
 .bit:hover:not(.reserved) {
     background: var(--bg-hover);
     transform: scale(1.1);
     box-shadow: 0 0 8px rgba(255, 107, 53, 0.3);
+}
+
+@container register-list (max-width: 500px) {
+    .bit:hover:not(.reserved) {
+        transform: scale(1.05);
+    }
 }
 
 .bit.active {
@@ -60,4 +81,10 @@
 
 .bit:nth-child(4n) {
     margin-right: 4px;
+}
+
+@container register-list (max-width: 500px) {
+    .bit:nth-child(4n) {
+        margin-right: 6px;
+    }
 }
