@@ -60,6 +60,26 @@ export function SpectrumVisualizer({
     };
   }, [bandwidth, deviation, isASK]);
 
+  // Ambient animation state for random signal simulation
+  const [animationTime, setAnimationTime] = useState(0);
+  const animationRef = useRef<number>();
+
+  // Animate ambient signals when not dragging
+  useEffect(() => {
+    if (!isDragging) {
+      const animate = () => {
+        setAnimationTime(t => (t + 0.016) % 1000); // ~60fps, wrap at 1000s
+        animationRef.current = requestAnimationFrame(animate);
+      };
+      animationRef.current = requestAnimationFrame(animate);
+      return () => {
+        if (animationRef.current) cancelAnimationFrame(animationRef.current);
+      };
+    } else {
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    }
+  }, [isDragging]);
+
   // Convert mouse/touch position to percentage
   const getPercentFromEvent = useCallback((e: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent) => {
     if (!containerRef.current) return 50;
@@ -146,6 +166,18 @@ export function SpectrumVisualizer({
     const bwWidth = displayData.bwPercent / 2;
     const devWidth = Math.max(displayData.devPercent, 0.5);
     
+    // Ambient RF noise generator (sine-based for smoothness)
+    const noise = (x: number, t: number) => {
+      // Create 3 different signal bursts at different frequencies
+      const signal1 = Math.sin((x / 10 + t * 0.5) * Math.PI) * Math.sin(t * 0.8);
+      const signal2 = Math.sin((x / 15 - t * 0.3) * Math.PI) * Math.sin(t * 1.2);
+      const signal3 = Math.sin((x / 20 + t * 0.7) * Math.PI) * Math.sin(t * 0.5);
+      
+      // Combine and scale (very subtle, 0-2 units of variation)
+      const combined = (signal1 + signal2 + signal3) / 3;
+      return combined * 1.5;
+    };
+    
     // Helper: Gaussian function for smooth lobes (GFSK)
     const gaussian = (x: number, center: number, sigma: number) => {
       const exp = Math.exp(-Math.pow(x - center, 2) / (2 * sigma * sigma));
@@ -203,6 +235,9 @@ export function SpectrumVisualizer({
       // Clip to bandwidth edges
       if (x < 50 - bwWidth || x > 50 + bwWidth) {
         y = baseY;
+      } else {
+        // Add ambient RF noise to active bandwidth region
+        y = Math.max(peakY, Math.min(baseY, y + noise(x, animationTime)));
       }
       
       points.push([x, y]);
@@ -225,7 +260,7 @@ export function SpectrumVisualizer({
     
     path += ` L ${50 + bwWidth},${baseY} L 100,${baseY} Z`;
     return path;
-  }, [isASK, is4FSK, modulation, displayData.devPercent, displayData.bwPercent, dataRate]);
+  }, [isASK, is4FSK, modulation, displayData.devPercent, displayData.bwPercent, dataRate, animationTime]);
 
   const freqMarkers = useMemo(() => {
     // Use fixed maximum span for frequency axis (max bandwidth = 812 kHz)
