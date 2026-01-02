@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ExportPanel } from '../../components/Export/ExportPanel';
+import type { FlipperBridge } from '../../hooks/useFlipperBridge';
 
 describe('ExportPanel Component', () => {
   const defaultRegisters: Record<number, number> = {
@@ -9,6 +10,18 @@ describe('ExportPanel Component', () => {
   };
   const defaultPaTable = [0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
 
+  // Mock Flipper bridge
+  const mockFlipperBridge: FlipperBridge = {
+    isConnected: false,
+    isConnecting: false,
+    connectionError: null,
+    connect: vi.fn(),
+    disconnect: vi.fn(),
+    sendRegisters: vi.fn(),
+    writeRegister: vi.fn(),
+    ping: vi.fn()
+  };
+
   it('renders export header', () => {
     render(
       <ExportPanel 
@@ -16,6 +29,9 @@ describe('ExportPanel Component', () => {
         paTable={defaultPaTable} 
         onImport={vi.fn()} 
         showToast={vi.fn()} 
+        flipperBridge={mockFlipperBridge}
+        autoSync={false}
+        onAutoSyncChange={vi.fn()}
       />
     );
     
@@ -29,6 +45,9 @@ describe('ExportPanel Component', () => {
         paTable={defaultPaTable} 
         onImport={vi.fn()} 
         showToast={vi.fn()} 
+        flipperBridge={mockFlipperBridge}
+        autoSync={false}
+        onAutoSyncChange={vi.fn()}
       />
     );
     
@@ -43,6 +62,9 @@ describe('ExportPanel Component', () => {
         paTable={defaultPaTable} 
         onImport={vi.fn()} 
         showToast={vi.fn()} 
+        flipperBridge={mockFlipperBridge}
+        autoSync={false}
+        onAutoSyncChange={vi.fn()}
       />
     );
     
@@ -57,6 +79,9 @@ describe('ExportPanel Component', () => {
         paTable={defaultPaTable} 
         onImport={vi.fn()} 
         showToast={vi.fn()} 
+        flipperBridge={mockFlipperBridge}
+        autoSync={false}
+        onAutoSyncChange={vi.fn()}
       />
     );
     
@@ -74,6 +99,9 @@ describe('ExportPanel Component', () => {
         paTable={defaultPaTable} 
         onImport={vi.fn()} 
         showToast={vi.fn()} 
+        flipperBridge={mockFlipperBridge}
+        autoSync={false}
+        onAutoSyncChange={vi.fn()}
       />
     );
     
@@ -92,6 +120,9 @@ describe('ExportPanel Component', () => {
         paTable={defaultPaTable} 
         onImport={vi.fn()} 
         showToast={vi.fn()} 
+        flipperBridge={mockFlipperBridge}
+        autoSync={false}
+        onAutoSyncChange={vi.fn()}
       />
     );
     
@@ -105,6 +136,9 @@ describe('ExportPanel Component', () => {
         paTable={defaultPaTable} 
         onImport={vi.fn()} 
         showToast={vi.fn()} 
+        flipperBridge={mockFlipperBridge}
+        autoSync={false}
+        onAutoSyncChange={vi.fn()}
       />
     );
     
@@ -119,6 +153,9 @@ describe('ExportPanel Component', () => {
         paTable={defaultPaTable} 
         onImport={vi.fn()} 
         showToast={showToast} 
+        flipperBridge={mockFlipperBridge}
+        autoSync={false}
+        onAutoSyncChange={vi.fn()}
       />
     );
     
@@ -137,6 +174,9 @@ describe('ExportPanel Component', () => {
         paTable={defaultPaTable} 
         onImport={onImport} 
         showToast={showToast} 
+        flipperBridge={mockFlipperBridge}
+        autoSync={false}
+        onAutoSyncChange={vi.fn()}
       />
     );
     
@@ -158,6 +198,9 @@ describe('ExportPanel Component', () => {
         paTable={defaultPaTable} 
         onImport={vi.fn()} 
         showToast={vi.fn()} 
+        flipperBridge={mockFlipperBridge}
+        autoSync={false}
+        onAutoSyncChange={vi.fn()}
       />
     );
     

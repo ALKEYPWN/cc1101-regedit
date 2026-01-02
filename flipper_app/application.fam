@@ -1,0 +1,16 @@
+App(
+    appid="cc1101_bridge",
+    name="CC1101 Register Editor Bridge",
+    apptype=FlipperAppType.EXTERNAL,
+    entry_point="cc1101_bridge_app",
+    stack_size=2 * 1024,
+    fap_category="Sub-GHz",
+    fap_version="1.0",
+    fap_icon="icon.png",
+    fap_description="USB bridge for CC1101 register editor",
+    fap_author="ALKEYPWN",
+    fap_weburl="https://github.com/alkeypwn/cc1101-regedit",
+    requires=[
+        "gui",
+    ],
+)

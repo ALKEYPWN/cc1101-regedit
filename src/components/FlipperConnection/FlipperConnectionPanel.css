@@ -1,0 +1,178 @@
+/**
+ * Flipper Connection Panel Styles
+ */
+
+.flipper-connection-panel {
+    background: var(--color-surface, #1e1e2e);
+    border: 1px solid var(--color-border, #383850);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.flipper-connection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    cursor: pointer;
+    user-select: none;
+    background: var(--color-surface-light, #252535);
+    transition: background 0.2s;
+}
+
+.flipper-connection-header:hover {
+    background: var(--color-surface-lighter, #2a2a3e);
+}
+
+.flipper-connection-header h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-primary, #e0e0e0);
+}
+
+.expand-icon {
+    font-size: 10px;
+    color: var(--color-text-secondary, #a0a0b0);
+}
+
+.flipper-connection-content {
+    padding: 16px;
+}
+
+/* Status Indicator */
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.status-icon {
+    font-size: 16px;
+    line-height: 1;
+}
+
+.status-text {
+    flex: 1;
+}
+
+.status-disconnected {
+    background: rgba(128, 128, 128, 0.1);
+    color: var(--color-text-secondary, #a0a0b0);
+}
+
+.status-connecting {
+    background: rgba(255, 193, 7, 0.15);
+    color: #ffc107;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.status-connected {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-text-primary, #e0e0e0);
+}
+
+.status-connected-sync {
+    background: rgba(76, 175, 80, 0.15);
+    color: #4caf50;
+}
+
+.status-error {
+    background: rgba(244, 67, 54, 0.15);
+    color: #f44336;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+}
+
+/* Connection Actions */
+.connection-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn-connect,
+.btn-disconnect {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-connect {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-connect:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-connect:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-disconnect {
+    background: rgba(244, 67, 54, 0.1);
+    color: #f44336;
+    border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+.btn-disconnect:hover {
+    background: rgba(244, 67, 54, 0.2);
+}
+
+/* Auto-sync Toggle */
+.auto-sync-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    cursor: pointer;
+    user-select: none;
+    color: var(--color-text-primary, #e0e0e0);
+}
+
+.auto-sync-toggle input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #4caf50;
+}
+
+.auto-sync-toggle span {
+    font-size: 13px;
+}
+
+/* Hint Text */
+.hint-text {
+    margin: 12px 0 0 0;
+    padding: 8px 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-left: 3px solid var(--color-accent, #667eea);
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--color-text-secondary, #a0a0b0);
+    line-height: 1.5;
+}

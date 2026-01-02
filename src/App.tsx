@@ -2,9 +2,10 @@
  * CC1101 Register Editor - Main App Component
  */
 
-import { useCallback } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useRegisters } from './hooks/useRegisters';
 import { useToast } from './hooks/useToast';
+import { useFlipperBridge } from './hooks/useFlipperBridge';
 import { Sidebar } from './components/Sidebar';
 import { EditorPanel } from './components/Editor';
 import { ExportPanel } from './components/Export';
@@ -27,6 +28,10 @@ function App() {
 
   const { toast, showToast } = useToast();
 
+  // Flipper bridge
+  const flipperBridge = useFlipperBridge();
+  const [autoSync, setAutoSync] = useState(false);
+
   const handleBitToggleWithToast = useCallback((addr: number, bit: number, fieldName: string) => {
     actions.toggleBit(addr, bit);
     const newValue = (registers[addr] ?? 0) ^ (1 << bit);
@@ -44,6 +49,24 @@ function App() {
     actions.reset();
     showToast('Reset to defaults');
   }, [actions, showToast]);
+
+  // Auto-sync registers to Flipper when enabled and connected
+  useEffect(() => {
+    if (autoSync && flipperBridge.isConnected) {
+      const syncRegisters = async () => {
+        try {
+          await flipperBridge.sendRegisters(registers, paTable);
+        } catch (error) {
+          console.error('Failed to sync registers:', error);
+          showToast('Failed to sync to Flipper');
+        }
+      };
+
+      // Debounce to avoid spamming Flipper with updates
+      const timeoutId = setTimeout(syncRegisters, 500);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [autoSync, flipperBridge.isConnected, registers, paTable, flipperBridge, showToast]);
 
   return (
     <div className="app-container">
@@ -80,6 +103,9 @@ function App() {
           paTable={paTable}
           onImport={handleImport}
           showToast={showToast}
+          flipperBridge={flipperBridge}
+          autoSync={autoSync}
+          onAutoSyncChange={setAutoSync}
         />
       </main>
 

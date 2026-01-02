@@ -4,8 +4,10 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import type { ExportFormat } from '../../types/cc1101';
+import type { FlipperBridge } from '../../hooks/useFlipperBridge';
 import { generateExport, parseFlipperPresetData, parseRawHex } from '../../utils/export';
 import { HighlightedFlipperPreview } from './HighlightedFlipperPreview';
+import { FlipperConnectionPanel } from '../FlipperConnection';
 import { CopyIcon, ImportIcon, ExportIcon } from './icons';
 import './ExportPanel.css';
 
@@ -14,9 +16,20 @@ interface ExportPanelProps {
   paTable: number[];
   onImport: (registers: Record<number, number>, paTable?: number[]) => void;
   showToast: (message: string, type?: 'success' | 'error') => void;
+  flipperBridge: FlipperBridge;
+  autoSync: boolean;
+  onAutoSyncChange: (enabled: boolean) => void;
 }
 
-export function ExportPanel({ registers, paTable, onImport, showToast }: ExportPanelProps) {
+export function ExportPanel({ 
+  registers, 
+  paTable, 
+  onImport, 
+  showToast,
+  flipperBridge,
+  autoSync,
+  onAutoSyncChange
+}: ExportPanelProps) {
   const [format, setFormat] = useState<ExportFormat>('flipper_setting');
   const [presetName, setPresetName] = useState('Custom_433');
   const [importData, setImportData] = useState('');
@@ -86,6 +99,13 @@ export function ExportPanel({ registers, paTable, onImport, showToast }: ExportP
           </button>
         )}
       </div>
+
+      {/* Flipper Connection Panel */}
+      <FlipperConnectionPanel 
+        bridge={flipperBridge}
+        autoSync={autoSync}
+        onAutoSyncChange={onAutoSyncChange}
+      />
 
       <div className="control-group">
         <label htmlFor="exportFormat">Format</label>
